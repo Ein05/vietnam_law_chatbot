@@ -2,6 +2,9 @@
 
 A Retrieval-Augmented Generation (RAG) system for accurate Vietnamese legal Q&A with zero hallucination.
 
+<img width="920" height="339" alt="image" src="https://github.com/user-attachments/assets/83e34b36-9026-4cf7-83dd-843751588bab" />
+
+
 ## 🔄 System Architecture
 
 ```mermaid
