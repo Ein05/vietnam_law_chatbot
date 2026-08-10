@@ -11,6 +11,31 @@ A Retrieval-Augmented Generation (RAG) system designed for answering Vietnamese 
 
 ---
 
+## 🔄 System Architecture & RAG Workflow
+
+```mermaid
+flowchart TD
+    subgraph Offline ["1. Offline Indexing Phase"]
+        A["Legal Dataset (Kaggle / VBPL)"] --> B["Text Chunking (15-220 words)"]
+        B --> C["SentenceTransformer (MiniLM-L12-v2)"]
+        C --> D[("FAISS Vector Index (faiss.index)")]
+        B --> E[("Document Store (docstore.pkl)")]
+    end
+
+    subgraph Online ["2. Online RAG Inference Pipeline"]
+        U(["User Query (Gradio UI)"]) --> F["Encode Query Vector"]
+        F --> G["Vector Similarity Search (Top-K)"]
+        D -.-> G
+        G --> H["Retrieve Context & Legal Citations"]
+        E -.-> H
+        H --> I["Construct Prompt (Strict Fact Constraints)"]
+        I --> J["LLM Generation (Qwen2-1.5B-Instruct)"]
+        J --> K["Return Answer & Citations (Gradio UI)"]
+    end
+```
+
+---
+
 ## 📂 Project Structure
 ```text
 laws/
