@@ -1,41 +1,27 @@
 # 🏛️ Vietnamese Legal RAG Chatbot
 
-A Retrieval-Augmented Generation (RAG) system designed for answering Vietnamese legal queries with accurate references and zero hallucination.
+A Retrieval-Augmented Generation (RAG) system for accurate Vietnamese legal Q&A with zero hallucination.
 
-<img width="920" height="339" alt="image" src="https://github.com/user-attachments/assets/36123bdf-1aaf-44e0-9be6-ae2a42df984d" />
+## 🔄 System Architecture
 
-
-## 📌 Features
-- **Retrieval-Augmented Generation (RAG)**: Combines dense vector retrieval with LLM text generation.
-- **Fast Similarity Search**: Powered by **FAISS** and `paraphrase-multilingual-MiniLM-L12-v2`.
-- **Fact-Based Generation**: Leverages `Qwen2-1.5B-Instruct` constrained strictly to retrieved context.
-- **Hardware-Adaptive**: Auto-detects CUDA GPU vs. CPU for optimized inference (`float16`/`float32`).
-- **Interactive UI**: Built with **Gradio** for seamless web-based legal Q&A.
+```mermaid
+flowchart LR
+    Query[User Question] --> Embed["MiniLM Embedder"]
+    Embed --> Search["FAISS Vector Search"]
+    Search --> DocStore[("Legal Docstore")]
+    DocStore --> Prompt["Constrained Prompt"]
+    Prompt --> LLM["Qwen2-1.5B LLM"]
+    LLM --> Response["Answer + Legal Citations"]
+```
 
 ---
 
-## 🔄 System Architecture & RAG Workflow
-
-```mermaid
-flowchart TD
-    subgraph Offline ["1. Offline Indexing Phase"]
-        A["Legal Dataset (Kaggle / VBPL)"] --> B["Text Chunking (15-220 words)"]
-        B --> C["SentenceTransformer (MiniLM-L12-v2)"]
-        C --> D[("FAISS Vector Index (faiss.index)")]
-        B --> E[("Document Store (docstore.pkl)")]
-    end
-
-    subgraph Online ["2. Online RAG Inference Pipeline"]
-        U(["User Query (Gradio UI)"]) --> F["Encode Query Vector"]
-        F --> G["Vector Similarity Search (Top-K)"]
-        D -.-> G
-        G --> H["Retrieve Context & Legal Citations"]
-        E -.-> H
-        H --> I["Construct Prompt (Strict Fact Constraints)"]
-        I --> J["LLM Generation (Qwen2-1.5B-Instruct)"]
-        J --> K["Return Answer & Citations (Gradio UI)"]
-    end
-```
+## 📌 Features
+- **Retrieval-Augmented Generation (RAG)**: Dense vector retrieval combined with LLM generation.
+- **Fast Vector Search**: Powered by **FAISS** & `paraphrase-multilingual-MiniLM-L12-v2`.
+- **Fact-Based Generation**: `Qwen2-1.5B-Instruct` strictly constrained to retrieved context.
+- **Hardware-Adaptive**: Auto-detects GPU (CUDA `float16`) vs CPU (`float32`).
+- **Web UI**: Interactive interface built with **Gradio**.
 
 ---
 
@@ -44,13 +30,13 @@ flowchart TD
 laws/
 ├── app/
 │   ├── GUI.py           # Gradio Web Interface
-│   └── rag_engine.py    # Core RAG Pipeline (Retrieval & LLM Generation)
+│   └── rag_engine.py    # Core RAG Pipeline
 ├── artifacts/
 │   ├── config.json      # Model configurations
 │   ├── faiss.index      # FAISS Vector Index
-│   └── docstore.pkl     # Legal text & citation mappings
-├── data/                # Raw datasets & benchmarks
-├── requirements.txt     # Python dependencies
+│   └── docstore.pkl     # Legal text & citations
+├── data/                # Datasets & benchmarks
+├── requirements.txt     # Dependencies
 └── README.md
 ```
 
@@ -59,23 +45,21 @@ laws/
 ## 🛠️ Quick Start
 
 ### 1. Installation
-Clone the repository and install dependencies:
 ```bash
 git clone https://github.com/Ein05/vietnam_law_chatbot.git
 cd vietnam_law_chatbot
 pip install -r requirements.txt
 ```
 
-### 2. Run the Application
-Launch the Gradio Web UI:
+### 2. Run Application
 ```bash
 python app/GUI.py
 ```
-Open your browser at `http://127.0.0.1:7860`.
+Open browser at `http://127.0.0.1:7860`.
 
 ---
 
-## 📊 Tech Stack & Dataset
+## 📊 Tech Stack
 - **Embedding**: `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`
 - **LLM**: `Qwen/Qwen2-1.5B-Instruct`
 - **Vector DB**: `FAISS`
