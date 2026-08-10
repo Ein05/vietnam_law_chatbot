@@ -1,0 +1,11 @@
+﻿{
+  "embedding_model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "llm_model": "Qwen/Qwen2-1.5B-Instruct",
+  "top_k": 5,
+  "faiss_type": "IndexFlatIP",
+  "normalize_embeddings": true,
+  "min_words": 15,
+  "max_words": 220,
+  "num_chunks": 9390,
+  "build_seconds": 22.522216320037842
+}
