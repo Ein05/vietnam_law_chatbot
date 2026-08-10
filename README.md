@@ -2,19 +2,28 @@
 
 A Retrieval-Augmented Generation (RAG) system for accurate Vietnamese legal Q&A with zero hallucination.
 
-![Uploading image.png…]()
-
-
 ## 🔄 System Architecture
 
 ```mermaid
 flowchart LR
-    Query[User Question] --> Embed["MiniLM Embedder"]
-    Embed --> Search["FAISS Vector Search"]
-    Search --> DocStore[("Legal Docstore")]
-    DocStore --> Prompt["Constrained Prompt"]
-    Prompt --> LLM["Qwen2-1.5B LLM"]
-    LLM --> Response["Answer + Legal Citations"]
+    subgraph Offline ["Phase 1: Offline Indexing"]
+        direction TB
+        Data["Legal Dataset"] --> Chunk["Text Chunking"]
+        Chunk --> Embedder["MiniLM Embedder"]
+        Embedder --> FAISS[("FAISS Index")]
+        Chunk --> Docstore[("Docstore")]
+    end
+
+    subgraph Online ["Phase 2: Online RAG Pipeline"]
+        direction TB
+        UserQuery["User Question"] --> Encode["Encode Query"]
+        Encode --> Search["FAISS Search"]
+        FAISS -.-> Search
+        Search --> Context["Fetch Context"]
+        Docstore -.-> Context
+        Context --> LLM["Qwen2-1.5B LLM"]
+        LLM --> Answer["Answer & Citations"]
+    end
 ```
 
 ---
