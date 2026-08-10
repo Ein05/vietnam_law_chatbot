@@ -2,6 +2,9 @@
 
 A Retrieval-Augmented Generation (RAG) system designed for answering Vietnamese legal queries with accurate references and zero hallucination.
 
+<img width="920" height="339" alt="image" src="https://github.com/user-attachments/assets/36123bdf-1aaf-44e0-9be6-ae2a42df984d" />
+
+
 ## 📌 Features
 - **Retrieval-Augmented Generation (RAG)**: Combines dense vector retrieval with LLM text generation.
 - **Fast Similarity Search**: Powered by **FAISS** and `paraphrase-multilingual-MiniLM-L12-v2`.
